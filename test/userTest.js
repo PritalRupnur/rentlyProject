@@ -59,47 +59,50 @@ describe('Users',   () => {
   });
 
   //test the get user by id api
- describe('/GET/:id user', () => {
-    it.only('it should GET a user by the given id', (done) => {
-        let user = new db.sequelize.models.user({
+ describe('/GET/:id user',  () => {
+    it('it should GET a user by the given id', async function () {
+        let user = {
             name: "Sita",
             age: 21,
            email: "sita@gmail.com",
            gender:"Female"
-        });
-        user.save((err, user) => {
+        };
+
+        const createUser = await db.sequelize.models.user.create(user)
             chai.request('http://localhost:3000')
-            console.log("Hellllo")
-          .get('/getUsers/' + user.id)
+            //console.log(createUser)
+          .get('/getUsers/' + createUser.id)
           .send(user)
           .end((err, res) => {
-            console.log(res)
+            //console.log(res)
                 res.should.have.status(200);
                 res.body.data.should.be.a('object');
                 res.body.data.should.have.property('name');
                 res.body.data.should.have.property('age');
                 res.body.data.should.have.property('email');
                 res.body.data.should.have.property('gender');
-                res.body.data.should.have.property('_id').eql(user.id);
-            done();
+                res.body.data.should.have.property('id').eql(createUser.id);
+            
         });
-    });
+    
 
 });
 });
 
 //describe to test the update api
   describe('/PUT/:id user', () => {
-      it('it should UPDATE a user given the id', (done) => {
-          let user = new db.sequelize.models.user({
+      it('it should UPDATE a user given the id', async function ()  {
+          let user = ({
             name: "Alia",
             age: 21,
            email: "alia.b@gmail.com",
            gender:"Female"
         })
-          user.save((err, user) => {
+        const updateUser = await db.sequelize.models.user.create(user)
+       
+        
                 chai.request('http://localhost:3000')
-                .put('/updateUsers/:id' + user.id)
+                .put('/updateUsers/' + updateUser.id)
                 .send({
                     name: "Deepika",
                     age: 22,
@@ -111,21 +114,43 @@ describe('Users',   () => {
                       res.body.should.be.a('object');
                       res.body.should.have.property('message').eql('User updated!');
                       
-                  done();
+                  
                 });
-          });
+          
       });
   });
+
+  //test casese for delete api.
+  describe('/DELETE/:id book', () => {
+    it('it should DELETE a book given the id', async function () {
+        let user = ({
+            name: "Alia",
+            age: 21,
+           email: "alia.b@gmail.com",
+           gender:"Female"
+        })
+        const deleteUser = await db.sequelize.models.user.create(user)
+       
+              chai.request('http://localhost:3000')
+              .delete('/deleteUsers/' + deleteUser.id)
+              .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message').eql('User has been deleted successfully');
+                    
+              });
+        
+    });
 
 });
 
 // describe("UserController test case", function () {
 //  it('gender should be always male female or others', function () {
-//      userController.createUser({"name":"Rama", "age":"15", "email":"rama@gmail.com", "gender":"Male"} )
+//      userControlRentlyler.createUser({"name":"Rama", "age":"15", "email":"rama@gmail.com", "gender":"Male"} )
 
 //         assert.equal("Hello".length, 4);
 //     });
 //  it('should return first charachter of the string', function () {
 //         assert.equal("Hello".charAt(0), 'H');
 //     });
-// });
+ });
