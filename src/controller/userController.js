@@ -46,9 +46,10 @@ const getUserById = async function(req, res){
         console.log(id)
 
         const userById = await db.sequelize.models.user.findOne({where:{id,},});
+        console.log(userById)
         return res.status(200).send({status:true, message:"User created successfully", data:userById});
 
-
+   
 
     }
     catch(error){
@@ -91,7 +92,7 @@ const updateUser = async function(req, res){
 
         const updatedUser = await update.update({name, age, email, gender})
 
-        return res.status(200).send({status:true, message:"User created successfully", data:updatedUser})
+        return res.status(200).send({status:true, message:"User updated!", data:updatedUser})
 
 
     }
