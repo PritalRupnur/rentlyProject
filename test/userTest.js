@@ -46,8 +46,8 @@ describe('Users', () => {
 
     })
 
-    afterEach((done) => { //Before each test we empty the database
-        console.log("hi")
+    afterEach((done) => { //after each test we empty the database
+       
         databaseCleaner.clean(client, (err) => {
 
             done();
@@ -97,7 +97,7 @@ describe('Users', () => {
 
                     
                     if (err)
-                    res.should.have.status(500);
+                    return done(err);
 
                     done();
 
