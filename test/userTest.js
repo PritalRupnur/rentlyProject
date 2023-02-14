@@ -123,17 +123,10 @@ describe('Users', () => {
   describe('/PUT/:id user', () => {
    
     it('it should UPDATE a user given the id', async function() {
-      user = ({
-        name: 'Alia',
-        age: 21,
-        email: 'alia.b@gmail.com',
-        gender: 'Female',
-      });
-      const updateUser = await db.sequelize.models.user.create(user);
-
+      
 
       chai.request('http://localhost:3000')
-          .put('/updateUsers/' + updateUser.id)
+          .put('/updateUsers/' + createUser.id)
           .send({
             name: 'Deepika',
             age: 22,
@@ -152,16 +145,9 @@ describe('Users', () => {
   describe('/DELETE/:id book', () => {
     
     it('it should DELETE a book given the id', async function() {
-      const user = ({
-        name: 'Alia',
-        age: 21,
-        email: 'alia.b@gmail.com',
-        gender: 'Female',
-      });
-      const deleteUser = await db.sequelize.models.user.create(user);
-
+    
       chai.request('http://localhost:3000')
-          .delete('/deleteUsers/' + deleteUser.id)
+          .delete('/deleteUsers/' + createUser.id)
           .end((err, res) => {
             res.should.have.status(200);
             res.body.should.be.a('object');
