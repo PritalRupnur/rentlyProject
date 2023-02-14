@@ -76,7 +76,7 @@ describe('Users', () => {
     describe('/createUser', () => {
         it('it should create a user with proper requirements', (done) => {
             let user = {
-                name: "Kiran",
+                name: "Kiraan",
                 age: 21,
                 email: "kir@gmail.com",
                 gender: "Female"
