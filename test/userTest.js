@@ -44,17 +44,18 @@ describe('Users', () => {
 
     createUser = await db.sequelize.models.user.create(user);
   });
+  afterEach((done) => { // after each test we empty the database
+    databaseCleaner.clean(client, (err) => {
+      done();
+    });
+  });
 
   
 
 
   // stub for practice
   describe('sample stub for practice', () => {
-    afterEach((done) => { // after each test we empty the database
-        databaseCleaner.clean(client, (err) => {
-          done();
-        });
-      });
+  
     it('should pass', (done) => {
       const name = new person('sita', 'gita');
       console.log(name);
@@ -70,16 +71,7 @@ describe('Users', () => {
 
   // describe block for creating user
   describe('/createUser', () => {
-    beforeEach((done) => { // after each test we empty the database
-        databaseCleaner.clean(client, (err) => {
-          done();
-        });
-      });
-    afterEach((done) => { // after each test we empty the database
-        databaseCleaner.clean(client, (err) => {
-          done();
-        });
-      });
+    
     it('it should create a user with proper requirements', (done) => {
       user = {
         name: 'Rani',
@@ -105,20 +97,14 @@ describe('Users', () => {
             done();
           });
     });
-    // const stub = sinon.stub(Stub, greet)
-  });
+    });
 
 
   // test the get user by id api
   describe('/GET/:id user', () => {
-    afterEach((done) => { // after each test we empty the database
-        databaseCleaner.clean(client, (err) => {
-          done();
-        });
-      });
+   
     it('it should GET a user by the given id', async function() {
       chai.request('http://localhost:3000')
-      // console.log(createUser)
           .get('/getUsers/' + createUser.id)
           .send(user)
           .end((err, res) => {
@@ -135,11 +121,7 @@ describe('Users', () => {
 
   // describe to test the update api
   describe('/PUT/:id user', () => {
-    afterEach((done) => { // after each test we empty the database
-        databaseCleaner.clean(client, (err) => {
-          done();
-        });
-      });
+   
     it('it should UPDATE a user given the id', async function() {
       user = ({
         name: 'Alia',
@@ -168,11 +150,7 @@ describe('Users', () => {
 
   // test casese for delete api.
   describe('/DELETE/:id book', () => {
-    afterEach((done) => { // after each test we empty the database
-        databaseCleaner.clean(client, (err) => {
-          done();
-        });
-      });
+    
     it('it should DELETE a book given the id', async function() {
       const user = ({
         name: 'Alia',

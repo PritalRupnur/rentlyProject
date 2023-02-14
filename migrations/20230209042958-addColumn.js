@@ -12,8 +12,8 @@ module.exports = {
      */
     const transaction = await queryInterface.sequelize.transaction();
     try {
-      // await queryInterface.addColumn('users', 'age', { type: Sequelize.INTEGER });
-      // await queryInterface.addColumn('users', 'email', { type: Sequelize.STRING });
+      await queryInterface.addColumn('users', 'age', {type: Sequelize.INTEGER});
+      await queryInterface.addColumn('users', 'email', {type: Sequelize.STRING});
       await queryInterface.addColumn('users', 'gender', {type: Sequelize.DataTypes.ENUM, values: ['Male', 'Female', 'Others']});
 
       // await queryInterface.addIndex(
