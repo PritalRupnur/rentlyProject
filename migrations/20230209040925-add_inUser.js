@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     /**
      * Add altering commands here.
      *
@@ -15,11 +15,11 @@ module.exports = {
       // gender: 'Doe',
       // email: 'example@example.com',
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     }]);
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     /**
      * Add reverting commands here.
      *
@@ -27,5 +27,5 @@ module.exports = {
      * await queryInterface.dropTable('users');
      */
     return queryInterface.bulkDelete('Users', null, {});
-  }
+  },
 };

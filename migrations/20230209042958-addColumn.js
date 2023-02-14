@@ -1,9 +1,9 @@
 'use strict';
-//var DataTypes = require('sequelize/lib/data-types');
+// var DataTypes = require('sequelize/lib/data-types');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     /**
      * Add altering commands here.
      *
@@ -12,10 +12,10 @@ module.exports = {
      */
     const transaction = await queryInterface.sequelize.transaction();
     try {
-      //await queryInterface.addColumn('users', 'age', { type: Sequelize.INTEGER });
-      //await queryInterface.addColumn('users', 'email', { type: Sequelize.STRING });
-      await queryInterface.addColumn('users', 'gender',  { type: Sequelize.DataTypes.ENUM, values:['Male', 'Female', 'Others'] });
-      
+      // await queryInterface.addColumn('users', 'age', { type: Sequelize.INTEGER });
+      // await queryInterface.addColumn('users', 'email', { type: Sequelize.STRING });
+      await queryInterface.addColumn('users', 'gender', {type: Sequelize.DataTypes.ENUM, values: ['Male', 'Female', 'Others']});
+
       // await queryInterface.addIndex(
       //   'Person',
       //   'petName',
@@ -32,7 +32,7 @@ module.exports = {
     }
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     /**
      * Add reverting commands here.
      *
@@ -41,12 +41,11 @@ module.exports = {
      */
     const transaction = await queryInterface.sequelize.transaction();
     try {
-     // await queryInterface.removeColumn('Person', 'petName', { transaction });
+      // await queryInterface.removeColumn('Person', 'petName', { transaction });
       await transaction.commit();
     } catch (err) {
       await transaction.rollback();
       throw err;
     }
-  
-  }
+  },
 };
