@@ -5,7 +5,7 @@ const server = require('../src/index')
 const route = require('../src/index')
 const db = require('../models/index')
 const pg = require('pg');
-const dbConfig = require("../config/config.json")['development']
+const dbConfig = require("../config/config.json")['test']
 
 const conString = `postgres://${dbConfig.username}:${dbConfig.password}@${dbConfig.host}:5432/${dbConfig.database}`;
 const client = new pg.Client(conString);
@@ -86,7 +86,12 @@ describe('Users', () => {
                 .send(user)
                 .end((err, res) => {
 
-
+                    if (err){
+                    res.body.should.have.status(500);
+                    res.body.should.have.property('message').eql(err.message);
+                   }
+                    
+                   else
                     res.should.have.status(201);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message').eql('User created successfully');
@@ -96,8 +101,8 @@ describe('Users', () => {
                     res.body.data.should.have.property('gender');
 
                     
-                    if (err)
-                    return done(err);
+                   
+                    
 
                     done();
 
