@@ -224,14 +224,6 @@ describe('Orders', () => {
     });
   });
 
-  // describe("UserController test case", function () {
-  //  it('gender should be always male female or others', function () {
-  //      userControlRentlyler.createUser({"name":"Rama", "age":"15", "email":"rama@gmail.com", "gender":"Male"} )
-
-  //         assert.equal("Hello".length, 4);
-  //     });
-  //  it('should return first charachter of the string', function () {
-  //         assert.equal("Hello".charAt(0), 'H');
-  //     });
+  
 });
 });
