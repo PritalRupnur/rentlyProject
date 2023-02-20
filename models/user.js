@@ -1,4 +1,7 @@
 'use strict';
+const {Op} = require('sequelize');
+const jwt = require('jsonwebtoken');
+
 const {
   Model,
 } = require('sequelize');
@@ -25,5 +28,40 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'user',
   });
-  return user;
+
+  user.associate = function(models) {
+    user.hasMany(models.order);
+  };
+
+
+
+  // login user
+  user.login = async function({name}) {
+
+
+
+    const data = await user.findOne({where: {name}});
+    const expiresIn = {expiresIn: '48h'};
+    const token = jwt.sign({
+      userId: data.id.toString(),
+      name: 'trainee',
+      iat: Math.floor(Date.now() / 1000),
+    },
+      'trainingProject',
+      expiresIn);
+     
+    const tokenData = {
+      userId: data.id,
+      token: token,
+    };
+    return tokenData;
+
+
+
+  };
+   return user;
 };
+
+
+
+

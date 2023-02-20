@@ -1,5 +1,6 @@
 
-const db = require('../../models/index');
+const db = require('../models/index');
+const jwt = require('jsonwebtoken');
 
 
 // createUser
@@ -8,10 +9,8 @@ const createUser = async function(req, res) {
     const requestBody = req.body;
 
     const {name, age, email, gender} = requestBody;
-    console.log(requestBody);
-
+   
     const userExist = await db.sequelize.models.user.findOne({where: {name}});
-    console.log({userExist});
     if (userExist) {
       return res.status(400).send({status: false, message: 'User Already exist'});
     }
@@ -27,22 +26,31 @@ const createUser = async function(req, res) {
 // getuser by id
 const getUserById = async function(req, res) {
   try {
-    const id = req.params.id;
-    console.log(id);
-
+    const id = req.params.userId;
     const userById = await db.sequelize.models.user.findOne({where: {id}});
-    console.log(userById);
-    return res.status(200).send({status: true, message: 'User created successfully', data: userById});
+     return res.status(200).send({status: true, message: 'here are user details', data: userById});
   } catch (error) {
     res.status(500).send({status: false, message: error.message});
   }
 };
 
+// loginUser
+const login = async function(req, res, next) {
+  await db.sequelize.models.user.login(req.body)
+    .then((data) => {
+      res.status(200).json({
+        success: true, data,
+      });
+    }).catch(next);
+};
+
+
+
 // UpdateUser
 const updateUser = async function(req, res) {
   try {
     const {name, age, email, gender} = req.body;
-    const id = req.params.id;
+    const id = req.params.userId;
 
     if (name) {
       db.sequelize.models.user.name = name;
@@ -77,7 +85,7 @@ const updateUser = async function(req, res) {
 // deleteUser
 const deleteUser = async function(req, res) {
   try {
-    const id = req.params.id;
+    const id = req.params.userId;
 
     const userToDelete = await db.sequelize.models.user.findOne({
       where: {
@@ -93,4 +101,4 @@ const deleteUser = async function(req, res) {
   }
 };
 
-module.exports = {getUserById, createUser, updateUser, deleteUser};
+module.exports = {getUserById, createUser, login, updateUser, deleteUser};
