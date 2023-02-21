@@ -50,23 +50,37 @@ describe('Orders', () => {
       .end((err, res) => {
         tokenNeeded = res.body.data.token;
         tokenUserId = res.body.data.userId;
+        console.log('hiii');
+        console.log(res.body.data);
         res.should.have.status(200);
         res.body.data.should.have.property('token');
-          res.body.data.should.have.property('userId');
-          
+        res.body.data.should.have.property('userId');
+        console.log(tokenNeeded + 'Prital');
         done();
       });
-  
+  });
+
+
+
+
+
+
 
   afterEach(async () => { // after each test we empty the database
     databaseCleaner.clean(client, (err) => {
-     
+
     });
   });
 
   // describe block for creating order
   describe('/createOrder/:userId', () => {
 
+
+    afterEach(async () => { // after each test we empty the database
+      databaseCleaner.clean(client, (err) => {
+
+      });
+    });
 
 
     it('it should create a order with proper requirements', (done) => {
@@ -105,43 +119,51 @@ describe('Orders', () => {
 
   // test the get user by id api
   describe('/GET/:id order', () => {
+    console.log(tokenNeeded + 'hello');
 
-     
-      let orderId;
-      let order;
-      let createOrder;
-      
 
-      beforeEach(async () => {
+    let orderId;
+    let order;
+    let createOrder;
 
-        order = {
-          productname: 'Smartwatch',
-          totalPrice: 21000,
-          totalQuantity: 1,
-          userId: tokenUserId,
-          status: 'Pending',
-        };
-    
-        createOrder = await db.sequelize.models.order.create(order);
-    
+
+    beforeEach(async () => {
+
+      order = {
+        productname: 'Smartwatch',
+        totalPrice: 21000,
+        totalQuantity: 1,
+        userId: tokenUserId,
+        status: 'Pending',
+      };
+
+      createOrder = await db.sequelize.models.order.create(order);
+
+    });
+
+
+    afterEach(async () => { // after each test we empty the database
+      databaseCleaner.clean(client, (err) => {
+
       });
+    });
 
     it('it should GET order by the given id', async function() {
-      
-       chai.request('http://localhost:3000')
+      console.log(tokenNeeded + 'hello');
+      chai.request('http://localhost:3000')
         .get('/getOrder/' + createOrder.id)
         .set({Authorization: `Bearer ${tokenNeeded}`})
 
-         .send(order)
+        .send(order)
         .end((err, res) => {
-           res.should.have.status(200);
+          res.should.have.status(200);
           // res.body.data.should.be.a('Array');// expect(res.body.data).to.deep.equal({});
-        //   res.body.data.should.have.property('productname');
-        //   res.body.data.should.have.property('totalPrice');
-        //   res.body.data.should.have.property('totalQuantity');
-        //   res.body.data.should.have.property('status');
-        //   res.body.data.should.have.property('Cancellable');
-         });
+          //   res.body.data.should.have.property('productname');
+          //   res.body.data.should.have.property('totalPrice');
+          //   res.body.data.should.have.property('totalQuantity');
+          //   res.body.data.should.have.property('status');
+          //   res.body.data.should.have.property('Cancellable');
+        });
     });
   });
 
@@ -161,26 +183,33 @@ describe('Orders', () => {
         status: 'Pending',
         Cancellable: true,
       };
-  
+
       createOrder = await db.sequelize.models.order.create(order);
-  
+
+    });
+
+
+    afterEach(async () => { // after each test we empty the database
+      databaseCleaner.clean(client, (err) => {
+
+      });
     });
 
     it('it should UPDATE a user given the id', async function() {
 
 
-     
+
       chai.request('http://localhost:3000')
         .put('/updateOrder/' + createOrder.id)
         .set({Authorization: `Bearer ${tokenNeeded}`})
-    
+
         .send({
           productname: 'Drone',
-        totalPrice: 21000,
-        totalQuantity: 1,
-        userId: tokenUserId,
-        status: 'Pending',
-        Cancellable: true,
+          totalPrice: 21000,
+          totalQuantity: 1,
+          userId: tokenUserId,
+          status: 'Pending',
+          Cancellable: true,
         })
         .end((err, res) => {
           res.should.have.status(200);
@@ -205,9 +234,16 @@ describe('Orders', () => {
         status: 'Pending',
         Cancellable: true,
       };
-  
+
       createOrder = await db.sequelize.models.order.create(order);
-  
+
+    });
+
+
+    afterEach(async () => { // after each test we empty the database
+      databaseCleaner.clean(client, (err) => {
+
+      });
     });
 
     it('it should DELETE a book given the id', async function() {
@@ -215,7 +251,7 @@ describe('Orders', () => {
       chai.request('http://localhost:3000')
         .delete('/deleteUsers/' + createUser.id)
         .set({Authorization: `Bearer ${tokenNeeded}`})
-    
+
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.be.a('object');
@@ -224,6 +260,7 @@ describe('Orders', () => {
     });
   });
 
-  
-});
+
+
+
 });
