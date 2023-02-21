@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
       const userExist = await db.sequelize.models.user.findOne({where: {id}});
       if (!userExist) {
 
-      return res.status(400).send({status: false, message: 'User does not exist'});
+      return 'User does not exist';
     }
     let newOrder;
     try {
@@ -126,19 +126,19 @@ return updateddata;
 
   const id = orderId;
 
-  const orderToDelete = await order.findOne({ 
+  const orderToDelete =await order.findOne({ 
     where: {
-       [Op.and]: [
-        {id: orderId},
-        {userId: userId},
-       ]}, 
+        
+        id: orderId,
+        userId: userId,
+       }, 
 });
     const deletedOrder = await orderToDelete.destroy();
 
     if (deletedOrder) {
       return 'Order deleted successfully';
     }
-    return deletedOrder;
+    
 
  };
   return order;

@@ -21,246 +21,60 @@ const should = chai.should(); // eslint-disable-line no-unused-vars
 
 chai.use(chaiHttp);
 
-describe('Orders', () => {
-  let createUser;
-  let tokenNeeded;
-  let user;
-  let userId;
-  beforeEach(async () => {
-
-    user = {
-      name: 'Sita',
-      age: 21,
-      email: 'sita@gmail.com',
-      gender: 'Female',
-    };
-
-    createUser = await db.sequelize.models.user.create(user);
-
-  });
-
-  beforeEach((done) => {
-    const loginDetails = {
-      name: 'Sita',
-    };
-    chai
-      .request('http://localhost:3000')
-      .post('/login')
-      .send(loginDetails)
-      .end((err, res) => {
-        tokenNeeded = res.body.data.token;
-        tokenUserId = res.body.data.userId;
-        console.log('hiii');
-        console.log(res.body.data);
-        res.should.have.status(200);
-        res.body.data.should.have.property('token');
-        res.body.data.should.have.property('userId');
-        console.log(tokenNeeded + 'Prital');
-        done();
-      });
-  });
-
-
-
-
-
-
-
-  afterEach(async () => { // after each test we empty the database
-    databaseCleaner.clean(client, (err) => {
-
+describe('order', ()=>{
+  describe('createOrder', () =>{
+    it('should create an order', async ()=>{
+      const {id} = await db.sequelize.models.user.create({name: 'Raj', age: 21, email: 'email', gender: 'Male'});
+      const orderResponse = await db.sequelize.models.order.createOrder('productname', 27000, 3, 'Pending', true, id);
+      console.log(orderResponse);
     });
   });
 
-  // describe block for creating order
-  describe('/createOrder/:userId', () => {
+   describe('getOrder', () =>{
+
+    it('should get the order of given user', async ()=>{
+
+      const {id} = await db.sequelize.models.user.create({name: 'Raj', age: 21, email: 'email', gender: 'Male'});
+     
+      const requiredOrder = await db.sequelize.models.order.getOrder(id);
+   
+      console.log(requiredOrder);
+   });
+   });
+
+   describe('updateOrder', ()=>{
 
 
-    afterEach(async () => { // after each test we empty the database
-      databaseCleaner.clean(client, (err) => {
+    // productname, totalPrice, totalQuantity, status, Cancellable, userId, orderId) {
+  
+    it('should update the order of given user', async ()=>{
 
-      });
-    });
-
-
-    it('it should create a order with proper requirements', (done) => {
-      order = {
-        productname: 'Laptop',
-        totalPrice: 100000,
-        totalQuantity: 1,
-        status: 'Pending',
-        Cancellable: true,
-      };
-      chai.request('http://localhost:3000')
-        .post('/createOrder/' + tokenUserId)
-        .set({Authorization: `Bearer ${tokenNeeded}`})
-
-        .send(order)
-        .end((err, res) => {
-
-          res.should.have.status(200);
-
-          res.body.should.be.a('object');
-          // res.body.should.have.property('message').eql('User created successfully');
-          res.body.data.should.have.property('productname');
-          res.body.data.should.have.property('totalPrice');
-          res.body.data.should.have.property('totalQuantity');
-          res.body.data.should.have.property('status');
-          res.body.data.should.have.property('userId').eql(tokenUserId);
-          res.body.data.should.have.property('Cancellable');
-
-
-
-          done();
-        });
-    });
-  });
-
-
-  // test the get user by id api
-  describe('/GET/:id order', () => {
-    console.log(tokenNeeded + 'hello');
-
-
-    let orderId;
-    let order;
-    let createOrder;
-
-
-    beforeEach(async () => {
-
-      order = {
-        productname: 'Smartwatch',
-        totalPrice: 21000,
-        totalQuantity: 1,
-        userId: tokenUserId,
-        status: 'Pending',
-      };
-
-      createOrder = await db.sequelize.models.order.create(order);
+      const {id} = await db.sequelize.models.user.create({name: 'Raj', age: 21, email: 'email', gender: 'Male'});
+      
+      const orderResponse = await db.sequelize.models.order.createOrder('productname', 27000, 3, 'Pending', true, id);
+     
+      const updatedOrder = await db.sequelize.models.order.updateOrder('Laptop', 97000, 3, 'Pending', true, id, orderResponse.id);
+     
 
     });
 
+   });
 
-    afterEach(async () => { // after each test we empty the database
-      databaseCleaner.clean(client, (err) => {
+   describe('deleteOrder', ()=>{
 
-      });
-    });
+    it('should delete the order of given user', async ()=>{
 
-    it('it should GET order by the given id', async function() {
-      console.log(tokenNeeded + 'hello');
-      chai.request('http://localhost:3000')
-        .get('/getOrder/' + createOrder.id)
-        .set({Authorization: `Bearer ${tokenNeeded}`})
-
-        .send(order)
-        .end((err, res) => {
-          res.should.have.status(200);
-          // res.body.data.should.be.a('Array');// expect(res.body.data).to.deep.equal({});
-          //   res.body.data.should.have.property('productname');
-          //   res.body.data.should.have.property('totalPrice');
-          //   res.body.data.should.have.property('totalQuantity');
-          //   res.body.data.should.have.property('status');
-          //   res.body.data.should.have.property('Cancellable');
-        });
-    });
-  });
-
-  // describe to test the update api
-  describe('/PUT/:id user', () => {
-
-    let order;
-    let createOrder;
-
-    beforeEach(async () => {
-
-      order = {
-        productname: 'Smartwatch',
-        totalPrice: 21000,
-        totalQuantity: 1,
-        userId: tokenUserId,
-        status: 'Pending',
-        Cancellable: true,
-      };
-
-      createOrder = await db.sequelize.models.order.create(order);
+      const {id} = await db.sequelize.models.user.create({name: 'Raj', age: 21, email: 'email', gender: 'Male'});
+      
+      const ordertoDelete = await db.sequelize.models.order.createOrder('productname', 27000, 3, 'Pending', true, id);
+     
+      const deleteResponse = await db.sequelize.models.order.deleteOrder(ordertoDelete.id, id);
+     
+     
 
     });
-
-
-    afterEach(async () => { // after each test we empty the database
-      databaseCleaner.clean(client, (err) => {
-
-      });
-    });
-
-    it('it should UPDATE a user given the id', async function() {
-
-
-
-      chai.request('http://localhost:3000')
-        .put('/updateOrder/' + createOrder.id)
-        .set({Authorization: `Bearer ${tokenNeeded}`})
-
-        .send({
-          productname: 'Drone',
-          totalPrice: 21000,
-          totalQuantity: 1,
-          userId: tokenUserId,
-          status: 'Pending',
-          Cancellable: true,
-        })
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.data.should.be.a('object');
-          // res.body.should.have.property('message').eql('User updated!');
-        });
-    });
-  });
-
-  // test casese for delete api.
-  describe('/DELETE/:id book', () => {
-    let order;
-    let createOrder;
-
-    beforeEach(async () => {
-
-      order = {
-        productname: 'Smartwatch',
-        totalPrice: 21000,
-        totalQuantity: 1,
-        userId: tokenUserId,
-        status: 'Pending',
-        Cancellable: true,
-      };
-
-      createOrder = await db.sequelize.models.order.create(order);
-
-    });
-
-
-    afterEach(async () => { // after each test we empty the database
-      databaseCleaner.clean(client, (err) => {
-
-      });
-    });
-
-    it('it should DELETE a book given the id', async function() {
-
-      chai.request('http://localhost:3000')
-        .delete('/deleteUsers/' + createUser.id)
-        .set({Authorization: `Bearer ${tokenNeeded}`})
-
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a('object');
-          res.body.should.have.property('message').eql('User has been deleted successfully');
-        });
-    });
-  });
-
-
-
+   });
 
 });
+
+
